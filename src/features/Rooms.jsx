@@ -1,16 +1,17 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import Button from "../components/Button";
 import SelectButton from "../components/SelectButton";
 import { useFilters } from "../context/FilterContext";
 
 function Rooms({ onCloseDropdown }) {
-  const { filters, setFilters } = useFilters();
+  const { state, dispatch } = useFilters();
   const [room, setRoom] = useState(0);
 
   const handleSetRoom = (room) => setRoom(room);
-  console.log(filters.rooms);
+
   const handleRoomFilter = () => {
-    setFilters((state) => ({ ...state, rooms: room }));
+    dispatch({ type: "Rooms", payload: room });
     onCloseDropdown();
   };
   return (
@@ -21,22 +22,22 @@ function Rooms({ onCloseDropdown }) {
         <SelectButton
           roomValue={1}
           handleSetRoom={handleSetRoom}
-          isActive={filters.rooms}
+          isActive={state.rooms}
         />
         <SelectButton
           roomValue={2}
           handleSetRoom={handleSetRoom}
-          isActive={filters.rooms}
+          isActive={state.rooms}
         />
         <SelectButton
           roomValue={3}
           handleSetRoom={handleSetRoom}
-          isActive={filters.rooms}
+          isActive={state.rooms}
         />
         <SelectButton
           roomValue={4}
           handleSetRoom={handleSetRoom}
-          isActive={filters.rooms}
+          isActive={state.rooms}
         />
       </div>
 

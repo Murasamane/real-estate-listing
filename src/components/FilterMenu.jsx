@@ -15,7 +15,7 @@ function FilterMenu({ target, children }) {
         className="flex items-center gap-1.5 font-bold text-base"
         onClick={() => setIsOpen((state) => !state)}
       >
-        {target} <Svg />
+        {target} <Svg isOpen={isOpen} />
       </button>
 
       {isOpen && (

@@ -1,21 +1,18 @@
 /* eslint-disable react/prop-types */
 import { useState } from "react";
-import Button from "../components/Button";
 import { useFilters } from "../context/FilterContext";
+import Button from "../components/Button";
 
 function Space({ onCloseDropdown }) {
-  const { filters, setFilters } = useFilters();
-  const [minSpace, setMinSpace] = useState(filters.minSpace);
-  const [maxSpace, setMaxSpace] = useState(filters.maxSpace);
+  const { state, dispatch } = useFilters();
+  const [minSpace, setMinSpace] = useState(state.minSpace);
+  const [maxSpace, setMaxSpace] = useState(state.maxSpace);
   const handleMinSpace = (e) => setMinSpace(e.target.value);
   const handleMaxSpace = (e) => setMaxSpace(e.target.value);
 
   const handleSpaceFilter = () => {
-    setFilters((state) => ({
-      ...state,
-      maxSpace: maxSpace,
-      minSpace: minSpace,
-    }));
+    dispatch({ type: "MinSpace", payload: minSpace });
+    dispatch({ type: "MaxSpace", payload: maxSpace });
     onCloseDropdown();
   };
   return (

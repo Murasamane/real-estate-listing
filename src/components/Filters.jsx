@@ -1,4 +1,6 @@
 /* eslint-disable react/prop-types */
+import { useFilters } from "../context/FilterContext";
+import Modal from "./Modal";
 import Button from "./Button";
 import FilterMenu from "./FilterMenu";
 import Region from "../features/Region";
@@ -6,29 +8,15 @@ import Price from "../features/Price";
 import Space from "../features/Space";
 import Rooms from "../features/Rooms";
 import FilterTag from "./FilterTag";
-import { useFilters } from "../context/FilterContext";
+import RangeSpace from "./RangeSpace";
+import RangePrice from "./RangePrice";
+import RoomsFilter from "./RoomsFilter";
+import AddAgent from "../features/AddAgent";
 
 export default function Filters({ regions }) {
-  const { filters } = useFilters();
+  const { state, dispatch } = useFilters();
 
-  const { region, minPrice, maxPrice, minSpace, maxSpace, rooms } = filters;
-
-  const rangeSpace =
-    minSpace > 0 && maxSpace > 0 ? (
-      <div className="text-sm">
-        {minSpace} მ<sup>2</sup> - {maxSpace} მ<sup>2</sup>`
-      </div>
-    ) : null;
-
-  const rangePrice =
-    minPrice > 0 && maxPrice > 0 ? (
-      <div className="text-sm">
-        {minPrice} ₾ - {maxPrice} ₾`
-      </div>
-    ) : null;
-
-  const fullFilter = [...region, rangeSpace, rangePrice, rooms];
-  console.log(region, minPrice, maxPrice, minSpace, maxSpace);
+  const { region, minPrice, maxPrice, minSpace, maxSpace, rooms } = state;
 
   return (
     <div className="flex items-center justify-between">
@@ -48,9 +36,25 @@ export default function Filters({ regions }) {
           </FilterMenu>
         </ul>
         <div className="flex items-center gap-2 flex-wrap">
-          {fullFilter.map((filter, index) =>
-            filter !== null && filter !== 0 ? <FilterTag key={index}>{filter}</FilterTag> : null
-          )}
+          {region.map((region) => (
+            <FilterTag key={region} region={region} dispatch={dispatch} />
+          ))}
+          {minSpace > 0 && maxSpace > 0 ? (
+            <RangeSpace
+              minSpace={minSpace}
+              maxSpace={maxSpace}
+              dispatch={dispatch}
+            />
+          ) : null}
+          {minPrice > 0 && maxPrice > 0 ? (
+            <RangePrice
+              minPrice={minPrice}
+              maxPrice={maxPrice}
+              dispatch={dispatch}
+            />
+          ) : null}
+
+          {rooms > 0 && <RoomsFilter room={rooms} dispatch={dispatch} />}
         </div>
       </div>
       <div className="flex items-center gap-4 self-start">
@@ -60,12 +64,19 @@ export default function Filters({ regions }) {
             "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200"
           }
         />
-        <Button
-          text={"+ აგენტის დამატება"}
-          buttonStyles={
-            "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px]"
-          }
-        />
+        <Modal>
+          <Modal.Open opens="addAgent">
+            <Button
+              text={"+ აგენტის დამატება"}
+              buttonStyles={
+                "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px]"
+              }
+            />
+          </Modal.Open>
+          <Modal.Window name="addAgent">
+            <AddAgent />
+          </Modal.Window>
+        </Modal>
       </div>
     </div>
   );

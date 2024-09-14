@@ -5,11 +5,12 @@ import Checkbox from "../components/Checkbox";
 import { useFilters } from "../context/FilterContext";
 
 function Region({ regions, onCloseDropdown }) {
-  const { filters, setFilters } = useFilters();
-  const [filterList, setFilterList] = useState(filters.region);
+  const { state, dispatch } = useFilters();
+  const [filterList, setFilterList] = useState(state.region);
 
   function handleFilter() {
-    setFilters((state) => ({ ...state, region: filterList }));
+    dispatch({ type: "Region", payload: filterList });
+    localStorage.setItem("regions", JSON.stringify(filterList));
     onCloseDropdown();
   }
   return (

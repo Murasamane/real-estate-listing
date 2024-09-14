@@ -4,18 +4,15 @@ import Button from "../components/Button";
 import { useFilters } from "../context/FilterContext";
 
 function Price({ onCloseDropdown }) {
-  const { filters, setFilters } = useFilters();
-  const [minPrice, setMinPrice] = useState(filters.minPrice);
-  const [maxPrice, setMaxPrice] = useState(filters.maxPrice);
+  const { state, dispatch } = useFilters();
+  const [minPrice, setMinPrice] = useState(state.minPrice);
+  const [maxPrice, setMaxPrice] = useState(state.maxPrice);
   const handleMinPrice = (e) => setMinPrice(e.target.value);
   const handleMaxPrice = (e) => setMaxPrice(e.target.value);
 
   const handlePriceFilter = () => {
-    setFilters((state) => ({
-      ...state,
-      minPrice: minPrice,
-      maxPrice: maxPrice,
-    }));
+    dispatch({ type: "MinPrice", payload: minPrice });
+    dispatch({ type: "MaxPrice", payload: maxPrice });
     onCloseDropdown();
   };
   return (
