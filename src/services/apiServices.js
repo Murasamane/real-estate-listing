@@ -7,7 +7,7 @@ headers.append("Content-Type", "application/json");
 
 export async function getAllEstates() {
   try {
-    const response = await fetch(`${API}regions`, {
+    const response = await fetch(`${API}agents`, {
       method: "GET",
       headers: headers,
     });
@@ -42,5 +42,29 @@ export async function getRegionsAndCities() {
   } catch (err) {
     console.error(err.message);
     throw err; // Rethrow the error
+  }
+}
+
+export async function createAgent(agent) {
+  try {
+    const res = await fetch(
+      `https://api.real-estate-manager.redberryinternship.ge/api/agents`,
+      {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${TOKEN}`,
+        },
+        body: JSON.stringify(agent),
+      }
+    );
+
+    if (!res.ok) throw new Error("failed to create an agent");
+
+    const data = res.json();
+
+    return data;
+  } catch (err) {
+    console.log(err);
   }
 }
