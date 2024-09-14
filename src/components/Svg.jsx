@@ -1,3 +1,10 @@
-export default function Svg() {
-  return <img src="./images/arrow.svg" alt="arrow" />;
+/* eslint-disable react/prop-types */
+export default function Svg({ isOpen }) {
+  return (
+    <img
+      src="./images/arrow.svg"
+      alt="arrow"
+      className={`${isOpen && "rotate-180"}`}
+    />
+  );
 }
