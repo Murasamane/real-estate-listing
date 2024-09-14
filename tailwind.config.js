@@ -11,7 +11,14 @@ export default {
         primaryGrey: {
           100: "#F3F3F3",
           200: "#808A93",
+          250: "#021526CC",
         },
+        primaryGreen: {
+          200: "#45A849",
+        },
+      },
+      maxWidth: {
+        nav: "720px",
       },
     },
   },

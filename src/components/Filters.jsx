@@ -1,26 +1,59 @@
+/* eslint-disable react/prop-types */
 import Button from "./Button";
-import Svg from "./Svg";
+import FilterMenu from "./FilterMenu";
+import Region from "../features/Region";
+import Price from "../features/Price";
+import Space from "../features/Space";
+import Rooms from "../features/Rooms";
+import FilterTag from "./FilterTag";
+import { useFilters } from "../context/FilterContext";
 
-export default function Filters() {
+export default function Filters({ regions }) {
+  const { filters } = useFilters();
+
+  const { region, minPrice, maxPrice, minSpace, maxSpace, rooms } = filters;
+
+  const rangeSpace =
+    minSpace > 0 && maxSpace > 0 ? (
+      <div className="text-sm">
+        {minSpace} მ<sup>2</sup> - {maxSpace} მ<sup>2</sup>`
+      </div>
+    ) : null;
+
+  const rangePrice =
+    minPrice > 0 && maxPrice > 0 ? (
+      <div className="text-sm">
+        {minPrice} ₾ - {maxPrice} ₾`
+      </div>
+    ) : null;
+
+  const fullFilter = [...region, rangeSpace, rangePrice, rooms];
+  console.log(region, minPrice, maxPrice, minSpace, maxSpace);
+
   return (
     <div className="flex items-center justify-between">
-      <div>
+      <div className="flex flex-col gap-4 max-w-nav">
         <ul className="flex items-center gap-9 border-2 border-primaryGrey-100 rounded-[10px] py-1.5 px-4">
-          <li className="flex items-center gap-1.5 font-bold text-base">
-            რეგიონი <Svg />
-          </li>
-          <li className="flex items-center gap-1.5 font-bold text-base">
-            საფასო კატეგორია <Svg />
-          </li>
-          <li className="flex items-center gap-1.5 font-bold text-base">
-            ფართობი <Svg />
-          </li>
-          <li className="flex items-center gap-1.5 font-bold text-base">
-            საძინებლის რაოდენობა <Svg />
-          </li>
+          <FilterMenu target={"რეგიონი"}>
+            <Region regions={regions} />
+          </FilterMenu>
+          <FilterMenu target={"საფასო კატეგორია"}>
+            <Price />
+          </FilterMenu>
+          <FilterMenu target={"ფართობი"}>
+            <Space />
+          </FilterMenu>
+          <FilterMenu target={"საძინებლების რაოდენობა"}>
+            <Rooms />
+          </FilterMenu>
         </ul>
+        <div className="flex items-center gap-2 flex-wrap">
+          {fullFilter.map((filter, index) =>
+            filter !== null && filter !== 0 ? <FilterTag key={index}>{filter}</FilterTag> : null
+          )}
+        </div>
       </div>
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-4 self-start">
         <Button
           text={"+ ლისტინგის დამატება"}
           buttonStyles={
