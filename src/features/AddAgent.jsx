@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAgent } from "../services/apiServices";
 import Button from "../components/Button";
+import InputElement from "../components/InputElement";
+import FileReader from "../components/FileReader";
 
 function AddAgent({ onCloseModal }) {
   const queryClient = useQueryClient();
@@ -46,79 +48,51 @@ function AddAgent({ onCloseModal }) {
       </h2>
 
       <div className="flex items-center gap-5">
-        <div className="flex flex-col justify-center">
-          <label htmlFor="firstName">სახელი*</label>
-          <input
-            type="text"
-            name="firstName"
-            id="firstName"
-            className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
-            {...register("firstName", { required: true, minLength: 2 })}
-          />
-          <p
-            className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
-              errors.firstName ? "text-primaryRed-200" : ""
-            }`}
-          >
-            <img src="./images/check.png" alt="check" /> მინიმუმ ორი სიმბოლო
-          </p>
-        </div>
-
-        <div className="flex flex-col justify-center">
-          <label htmlFor="lastName">გვარი*</label>
-          <input
-            type="text"
-            name="lastName"
-            id="lastName"
-            className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
-            {...register("lastName", { required: true, minLength: 2 })}
-          />
-          <p
-            className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
-              errors.firstName ? "text-primaryRed-200" : ""
-            }`}
-          >
-            <img src="./images/check.png" alt="check" /> მინიმუმ ორი სიმბოლო
-          </p>
-        </div>
+        <InputElement
+          type="text"
+          name="firstName"
+          id="firstName"
+          register={{
+            ...register("firstName", { required: true, minLength: 2 }),
+          }}
+          errors={errors.firstName}
+          requirement={"მინიმუმ ორი სიმბოლო"}
+        />
+        <InputElement
+          type="text"
+          name="lastName"
+          id="lastName"
+          register={{
+            ...register("lastName", { required: true, minLength: 2 }),
+          }}
+          errors={errors.lastName}
+          requirement={"მინიმუმ ორი სიმბოლო"}
+        />
       </div>
       <div className="flex items-center gap-5">
-        <div className="flex flex-col justify-center">
-          <label htmlFor="email">ელ-ფოსტა*</label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
-            {...register("email", {
-              required: true,
-              pattern: {
-                value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                message: "Invalid email format",
-              },
-              validate: (value) =>
-                value.endsWith("@redberry.ge") ||
-                "გამოიყენეთ @redberry.ge ფოსტა",
-            })}
-          />
-          <p
-            className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
-              errors.email ? "text-primaryRed-200" : ""
-            }`}
-          >
-            <img src="./images/check.png" alt="check" /> გამოიყენეთ @redberry.ge
-            ფოსტა
-          </p>
-        </div>
-
-        <div className="flex flex-col justify-center">
-          <label htmlFor="phone">ტელეფონის ნომერი*</label>
-          <input
-            type="text"
-            name="phone"
-            id="phone"
-            className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
-            {...register("phone", {
+        <InputElement
+          type="email"
+          name="email"
+          id="email"
+          {...register("email", {
+            required: true,
+            pattern: {
+              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+              message: "Invalid email format",
+            },
+            validate: (value) =>
+              value.endsWith("@redberry.ge") || "გამოიყენეთ @redberry.ge ფოსტა",
+          })}
+          requirement={`გამოიყენეთ @redberry.ge
+            ფოსტა`}
+          errors={errors.email}
+        />
+        <InputElement
+          type="text"
+          name="phone"
+          id="phone"
+          register={{
+            ...register("phone", {
               required: "ტელეფონის ნომერი აუცილებელია",
               pattern: {
                 value: /^5\d{8}$/,
@@ -128,46 +102,21 @@ function AddAgent({ onCloseModal }) {
               validate: (value) =>
                 value.length === 9 ||
                 "ტელეფონის ნომერი უნდა შედგებოდეს 9 ციფრისგან",
-            })}
-          />
-          <p
-            className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
-              errors.phone ? "text-primaryRed-200" : ""
-            }`}
-          >
-            <img src="./images/check.png" alt="check" /> მხოლოდ რიცხვები
-          </p>
-        </div>
-      </div>
-
-      <div className="w-full">
-        <p className="mb-2.5 font-medium text-primaryBlack-300 text-sm">
-          ატვირთეთ ფოტო *
-        </p>
-        <label
-          htmlFor="fileUpload"
-          className="w-[800px] h-[120px] border-2 border-dotted border-primaryBlue-200 flex items-center justify-center rounded-lg"
-        >
-          <img src="./images/plus.png" alt="file upload" />
-        </label>
-        <input
-          type="file"
-          accept="image/*"
-          id="fileUpload"
-          name="file"
-          src="./images/plus.png"
-          className="w-0 h-0"
-          {...register("avatar", { required: true })}
+            }),
+          }}
+          requirement={`მხოლოდ რიცხვები`}
+          errors={errors.phone}
         />
-        {errors.avatar && (
-          <p
-            className={`flex items-center gap-2 mt-1 text-primaryRed-200 text-sm`}
-          >
-            ატვირთეთ ფოტო
-          </p>
-        )}
       </div>
-
+      <FileReader
+        type="file"
+        accept="image/*"
+        id="fileUpload"
+        name="file"
+        register={{ ...register("avatar", { required: true }) }}
+        requirement={"ატვირთეთ ფოტო"}
+        errors={errors.avatar}
+      />
       <div className="flex items-center justify-end gap-4">
         <Button
           text={"გაუქმება"}

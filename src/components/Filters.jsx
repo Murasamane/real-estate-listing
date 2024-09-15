@@ -59,6 +59,7 @@ export default function Filters({ regions }) {
       </div>
       <div className="flex items-center gap-4 self-start">
         <Button
+          href="/createEstate"
           text={"+ ლისტინგის დამატება"}
           buttonStyles={
             "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200"
