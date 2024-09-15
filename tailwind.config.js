@@ -18,6 +18,7 @@ export default {
         },
         primaryBlack: {
           300: "#021526",
+          400: "#1A1A1F",
         },
         primaryBlue: {
           200: "#2D3648",
