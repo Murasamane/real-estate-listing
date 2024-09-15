@@ -1,10 +1,9 @@
 /* eslint-disable react/prop-types */
 import { useForm } from "react-hook-form";
-import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Button from "../components/Button";
-import UploadWidget from "../components/UploadWidget";
 import { createAgent } from "../services/apiServices";
+import Button from "../components/Button";
+
 function AddAgent({ onCloseModal }) {
   const queryClient = useQueryClient();
   const { mutate } = useMutation({
@@ -25,15 +24,16 @@ function AddAgent({ onCloseModal }) {
     reset,
     formState: { errors },
   } = useForm();
-  const [imageUrl, setImageUrl] = useState("");
+
   const handleFormSubmit = async (data) => {
     const agent = {
       name: data.firstName,
       surname: data.lastName,
-      avatar: imageUrl,
+      email: data.email,
+      avatar: data.avatar,
+      phone: data.phone,
     };
 
-    console.log(imageUrl);
     mutate(agent);
   };
   return (
@@ -114,13 +114,27 @@ function AddAgent({ onCloseModal }) {
         <div className="flex flex-col justify-center">
           <label htmlFor="phone">ტელეფონის ნომერი*</label>
           <input
-            type="number"
+            type="text"
             name="phone"
             id="phone"
             className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
-            {...register("phone", { required: true })}
+            {...register("phone", {
+              required: "ტელეფონის ნომერი აუცილებელია",
+              pattern: {
+                value: /^5\d{8}$/,
+                message:
+                  "მხოლოდ ქართული მობილურის ნომერი (9 ციფრი, უნდა დაიწყოს 5-ით)",
+              },
+              validate: (value) =>
+                value.length === 9 ||
+                "ტელეფონის ნომერი უნდა შედგებოდეს 9 ციფრისგან",
+            })}
           />
-          <p className="flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm">
+          <p
+            className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
+              errors.phone ? "text-primaryRed-200" : ""
+            }`}
+          >
             <img src="./images/check.png" alt="check" /> მხოლოდ რიცხვები
           </p>
         </div>
@@ -130,7 +144,28 @@ function AddAgent({ onCloseModal }) {
         <p className="mb-2.5 font-medium text-primaryBlack-300 text-sm">
           ატვირთეთ ფოტო *
         </p>
-        <UploadWidget setImageUrl={setImageUrl} />
+        <label
+          htmlFor="fileUpload"
+          className="w-[800px] h-[120px] border-2 border-dotted border-primaryBlue-200 flex items-center justify-center rounded-lg"
+        >
+          <img src="./images/plus.png" alt="file upload" />
+        </label>
+        <input
+          type="file"
+          accept="image/*"
+          id="fileUpload"
+          name="file"
+          src="./images/plus.png"
+          className="w-0 h-0"
+          {...register("avatar", { required: true })}
+        />
+        {errors.avatar && (
+          <p
+            className={`flex items-center gap-2 mt-1 text-primaryRed-200 text-sm`}
+          >
+            ატვირთეთ ფოტო
+          </p>
+        )}
       </div>
 
       <div className="flex items-center justify-end gap-4">
