@@ -27,21 +27,25 @@ export async function getAllEstates() {
 
 export async function getRegionsAndCities() {
   try {
-    const [regionsResponse, citiesResponse] = await Promise.all([
-      fetch(`${API}/regions`, { method: "GET", headers: headers }),
-      fetch(`${API}/cities`, { method: "GET", headers: headers }),
-    ]);
+    const [regionsResponse, citiesResponse, agentsResponse] = await Promise.all(
+      [
+        fetch(`${API}/regions`, { method: "GET", headers: headers }),
+        fetch(`${API}/cities`, { method: "GET", headers: headers }),
+        fetch(`${API}/agents`, { method: "GET", headers: headers }),
+      ]
+    );
 
     if (!regionsResponse.ok || !citiesResponse.ok) {
       throw new Error("Something went wrong");
     }
 
-    const [regionsData, citiesData] = await Promise.all([
+    const [regionsData, citiesData, agentsData] = await Promise.all([
       regionsResponse.json(),
       citiesResponse.json(),
+      agentsResponse.json(),
     ]);
 
-    return { regions: regionsData, cities: citiesData };
+    return { regions: regionsData, cities: citiesData, agents: agentsData };
   } catch (err) {
     console.error(err.message);
     throw err;
@@ -59,6 +63,39 @@ export async function createAgent(agent) {
   try {
     await axios.post(
       "https://api.real-estate-manager.redberryinternship.ge/api/agents",
+      formData,
+      {
+        headers: {
+          Authorization: "Bearer 9d02b658-960b-487e-ac02-9bcfe1af4285",
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  } catch (error) {
+    console.error(
+      "Error posting data:",
+      error.response ? error.response.data : error.message
+    );
+  }
+}
+
+export async function createListing(estate) {
+  const formData = new FormData();
+  formData.append("address", estate.address);
+  formData.append("image", estate.image);
+  formData.append("region_id", estate.region_id);
+  formData.append("description", estate.description);
+  formData.append("city_id", estate.city_id);
+  formData.append("zip_code", estate.zip_code);
+  formData.append("price", estate.price);
+  formData.append("area", estate.area);
+  formData.append("bedrooms", estate.bedrooms);
+  formData.append("is_rental", estate.is_rental);
+  formData.append("agent_id", estate.agent_id);
+
+  try {
+    await axios.post(
+      "https://api.real-estate-manager.redberryinternship.ge/api/real-estates",
       formData,
       {
         headers: {

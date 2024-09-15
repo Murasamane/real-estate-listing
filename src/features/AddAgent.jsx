@@ -5,6 +5,7 @@ import { createAgent } from "../services/apiServices";
 import Button from "../components/Button";
 import InputElement from "../components/InputElement";
 import FileReader from "../components/FileReader";
+import toast from "react-hot-toast";
 
 function AddAgent({ onCloseModal }) {
   const queryClient = useQueryClient();
@@ -13,11 +14,12 @@ function AddAgent({ onCloseModal }) {
     mutationFn: createAgent,
     onSuccess: () => {
       queryClient.invalidateQueries();
+      toast.success("Agent added successfully 🥳🥳🥳🥳");
       reset();
       onCloseModal();
     },
-    onError: (err) => {
-      console.log(err);
+    onError: () => {
+      toast.error("Agent could not be added, try again please ! 😔😔😔");
     },
   });
   const {
@@ -71,15 +73,12 @@ function AddAgent({ onCloseModal }) {
       </div>
       <div className="flex items-center gap-5">
         <InputElement
+          label={"ელ-ფოსტა"}
           type="email"
           name="email"
           id="email"
           {...register("email", {
-            required: true,
-            pattern: {
-              value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-              message: "Invalid email format",
-            },
+            required: "ელ-ფოსტა სავალდებულოა",
             validate: (value) =>
               value.endsWith("@redberry.ge") || "გამოიყენეთ @redberry.ge ფოსტა",
           })}
@@ -116,6 +115,7 @@ function AddAgent({ onCloseModal }) {
         register={{ ...register("avatar", { required: true }) }}
         requirement={"ატვირთეთ ფოტო"}
         errors={errors.avatar}
+        label={"ატვირთეთ ფოტო"}
       />
       <div className="flex items-center justify-end gap-4">
         <Button
