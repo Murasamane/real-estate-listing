@@ -51,6 +51,9 @@ const reducer = (state, action) => {
         region: regions,
       };
     }
+
+    case "Clear":
+      return initialState;
     default:
       return initialState;
   }

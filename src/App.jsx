@@ -3,8 +3,9 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import AppLayout from "./layouts/AppLayout";
 import Homepage from "./pages/Homepage";
 import AddEstate from "./pages/AddEstate";
-import EstateFormLayout from "./layouts/EstateFormLayout";
+import EstateLayout from "./layouts/EstateLayout";
 import { Toaster } from "react-hot-toast";
+import DetailsPage from "./pages/DetailsPage";
 
 function App() {
   const queryClient = new QueryClient({
@@ -21,8 +22,9 @@ function App() {
           <Route path="/" element={<AppLayout />}>
             <Route index element={<Homepage />} />
           </Route>
-          <Route path="/createEstate" element={<EstateFormLayout />}>
-            <Route index element={<AddEstate />} />
+          <Route path="/estates" element={<EstateLayout />}>
+            <Route path="createEstate" element={<AddEstate />} />
+            <Route path=":id" element={<DetailsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>

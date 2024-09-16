@@ -27,11 +27,11 @@ function AddEstate() {
     mutationFn: createListing,
     onSuccess: () => {
       queryClient.invalidateQueries();
-      toast.success("Listing added successfully 🥳🥳🥳🥳");
+      toast.success("ლისტინგი წარმატებით დაემატა 🥳🥳🥳🥳");
       navigate("/");
     },
     onError: (err) => {
-      toast.error("Listing could not be added, try again ! 😔");
+      toast.error("ლისტინგის დამატება ვერ მოხერხდა, სცადეთ ახლიდან! 😔");
     },
   });
   const {
@@ -81,8 +81,6 @@ function AddEstate() {
   }, [selectedRegion, data]);
 
   if (isLoading) return <p>Loading...</p>;
-
-  console.log(data);
 
   return (
     <form
@@ -273,11 +271,11 @@ function AddEstate() {
 
       <div className="flex flex-col gap-2">
         <label htmlFor="description">აღწერა *</label>
-        <input
+        <textarea
           type="text"
           id="description"
           name="description"
-          className="rounded-md p-2.5 border-2 border-primaryGrey-200 h-32"
+          className="rounded-md p-2.5 border-2 border-primaryGrey-200 h-32 resize-none"
           {...register("description", { required: true, minLength: 5 })}
         />
         <p
@@ -285,7 +283,7 @@ function AddEstate() {
             errors.description ? "text-primaryRed-200" : ""
           }`}
         >
-          <img src="./images/check.png" alt="check" />
+          <img src="/images/check.png" alt="check" />
           მინიმუმ ხუთი სიტყვა
         </p>
       </div>

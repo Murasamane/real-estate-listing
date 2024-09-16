@@ -19,7 +19,7 @@ const InputElement = React.forwardRef(
             errors ? "text-primaryRed-200" : ""
           }`}
         >
-          <img src="./images/check.png" alt="check" /> {requirement}
+          <img src="/images/check.png" alt="check" /> {requirement}
         </p>
       </div>
     );

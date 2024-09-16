@@ -18,7 +18,7 @@ export default function AppLayout() {
       <div className="px-7">
         <Filters regions={data.regions} />
       </div>
-      <main>
+      <main className="px-7">
         <Outlet />
       </main>
     </div>

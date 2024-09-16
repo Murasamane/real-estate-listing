@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import Header from "../components/Header";
 
-function EstateFormLayout() {
+function EstateLayout() {
   return (
     <div>
       <Header />
@@ -12,4 +12,4 @@ function EstateFormLayout() {
   );
 }
 
-export default EstateFormLayout;
+export default EstateLayout;

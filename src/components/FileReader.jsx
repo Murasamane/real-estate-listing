@@ -9,14 +9,13 @@ function FileReader({ register, errors, label, requirement, name, id }) {
         htmlFor={id}
         className="w-[800px] h-[120px] border-2 border-dotted border-primaryBlue-200 flex items-center justify-center rounded-lg"
       >
-        <img src="./images/plus.png" alt="file upload" />
+        <img src="/images/plus.png" alt="file upload" />
       </label>
       <input
         type="file"
         accept="image/*"
         id={id}
         name={name}
-        src="./images/plus.png"
         className="w-0 h-0"
         {...register}
       />

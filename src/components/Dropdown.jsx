@@ -17,7 +17,7 @@ function Dropdown({ setIsOpen, buttonRef, children }) {
     };
   }, [buttonRef, setIsOpen]);
   return (
-    <div className="-left-4 rounded-lg absolute bg-white top-10" ref={ref}>
+    <div className="-left-4 rounded-lg absolute bg-white top-10 z-50" ref={ref}>
       {children}
     </div>
   );

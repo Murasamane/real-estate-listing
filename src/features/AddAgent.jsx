@@ -14,12 +14,12 @@ function AddAgent({ onCloseModal }) {
     mutationFn: createAgent,
     onSuccess: () => {
       queryClient.invalidateQueries();
-      toast.success("Agent added successfully 🥳🥳🥳🥳");
+      toast.success("აგენტი წარმატებით დაემატა 🥳🥳🥳🥳");
       reset();
       onCloseModal();
     },
     onError: () => {
-      toast.error("Agent could not be added, try again please ! 😔😔😔");
+      toast.error("აგენტის დამატება ვერ მოხერხდა, გთხოვთ სცადოთ ხელახლა ! 😔😔😔");
     },
   });
   const {
@@ -52,6 +52,7 @@ function AddAgent({ onCloseModal }) {
       <div className="flex items-center gap-5">
         <InputElement
           type="text"
+          label={"სახელი"}
           name="firstName"
           id="firstName"
           register={{
@@ -62,6 +63,7 @@ function AddAgent({ onCloseModal }) {
         />
         <InputElement
           type="text"
+          label={"გვარი"}
           name="lastName"
           id="lastName"
           register={{
@@ -77,17 +79,22 @@ function AddAgent({ onCloseModal }) {
           type="email"
           name="email"
           id="email"
-          {...register("email", {
-            required: "ელ-ფოსტა სავალდებულოა",
-            validate: (value) =>
-              value.endsWith("@redberry.ge") || "გამოიყენეთ @redberry.ge ფოსტა",
-          })}
+          register={{
+            ...register("email", {
+              required: true,
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@redberry\.ge$/,
+                message: "გამოიყენეთ @redberry.ge ფოსტა",
+              },
+            }),
+          }}
           requirement={`გამოიყენეთ @redberry.ge
             ფოსტა`}
           errors={errors.email}
         />
         <InputElement
           type="text"
+          label={"ტელეფონის ნომერი"}
           name="phone"
           id="phone"
           register={{

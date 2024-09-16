@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { getAllEstates } from "../services/apiServices";
+import ListingCard from "../components/ListingCard";
 
 export default function Homepage() {
   const { data, isLoading } = useQuery({
@@ -9,6 +10,11 @@ export default function Homepage() {
 
   if (isLoading) return <p>Loading...</p>;
 
-  console.log(data);
-  return <div>Hello Listers</div>;
+  return (
+    <div className="grid grid-cols-4 items-center flex-wrap gap-5">
+      {data.map((list) => (
+        <ListingCard key={list.id} data={list} />
+      ))}
+    </div>
+  );
 }

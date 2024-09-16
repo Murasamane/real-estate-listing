@@ -3,14 +3,16 @@
 @tailwind utilities;
 
 @font-face {
-  font-family: "firaGo";
+  font-family: "FiraGo";
   src: local("firaGo"), url("./fonts/FiraGO-Regular.otf") format("truetype");
 }
 
-* {
-  font-family: "firaGo";
-}
 @layer utilities {
+  html,
+  *,
+  body {
+    font-family: "FiraGo", sans-serif;
+  }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;

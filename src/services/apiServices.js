@@ -10,21 +10,27 @@ headers.append("Content-Type", "application/json");
 
 export async function getAllEstates() {
   try {
-    const response = await fetch(`${API}/agents`, {
-      method: "GET",
+    const response = await axios.get(`${API}/real-estates`, {
       headers: headers,
     });
 
-    if (!response.ok) throw new Error("something went wrong");
-
-    const data = await response.json();
-
-    return data;
+    return response.data;
   } catch (err) {
-    console.log(err.message);
+    console.error(err.message);
   }
 }
 
+export async function getEstate(id) {
+  try {
+    const response = await axios.get(`${API}/real-estates/${id}`, {
+      headers: headers,
+    });
+
+    return response.data;
+  } catch (err) {
+    console.error(err.message);
+  }
+}
 export async function getRegionsAndCities() {
   try {
     const [regionsResponse, citiesResponse, agentsResponse] = await Promise.all(
@@ -109,5 +115,59 @@ export async function createListing(estate) {
       "Error posting data:",
       error.response ? error.response.data : error.message
     );
+  }
+}
+
+export async function deleteListing(id) {
+  try {
+    const response = await axios.delete(`${API}/real-estates/${+id}`, {
+      headers: {
+        Authorization: "Bearer 9d02b658-960b-487e-ac02-9bcfe1af4285",
+      },
+    });
+
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting the estate:", error.message);
+
+    throw new Error("Failed to delete the estate");
+  }
+}
+
+export async function getSimilar(id) {
+  try {
+    const [estateRes, similarRes] = await Promise.all([
+      fetch(`${API}/real-estates/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer 9d02b658-960b-487e-ac02-9bcfe1af4285",
+        },
+      }),
+      fetch(`${API}/real-estates`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer 9d02b658-960b-487e-ac02-9bcfe1af4285",
+        },
+      }),
+    ]);
+
+    if (!estateRes.ok || !similarRes.ok) {
+      throw new Error("Something went wrong");
+    }
+
+    const [estateData, similarData] = await Promise.all([
+      estateRes.json(),
+      similarRes.json(),
+    ]);
+
+    const similarEstates = similarData.filter(
+      (estate) =>
+        estate.city.name === estateData.city.name && estate.id !== estateData.id
+    );
+
+    return { estate: estateData, similars: similarEstates };
+  } catch (err) {
+    console.error(err.message);
+    throw err;
   }
 }

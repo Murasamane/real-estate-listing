@@ -20,7 +20,7 @@ export default function Filters({ regions }) {
 
   return (
     <div className="flex items-center justify-between">
-      <div className="flex flex-col gap-4 max-w-nav">
+      <div className="flex flex-col gap-4">
         <ul className="flex items-center gap-9 border-2 border-primaryGrey-100 rounded-[10px] py-1.5 px-4">
           <FilterMenu target={"რეგიონი"}>
             <Region regions={regions} />
@@ -35,7 +35,7 @@ export default function Filters({ regions }) {
             <Rooms />
           </FilterMenu>
         </ul>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex items-center gap-2 flex-wrap max-w-nav">
           {region.map((region) => (
             <FilterTag key={region} region={region} dispatch={dispatch} />
           ))}
@@ -55,11 +55,24 @@ export default function Filters({ regions }) {
           ) : null}
 
           {rooms > 0 && <RoomsFilter room={rooms} dispatch={dispatch} />}
+          {region.length > 0 ||
+          minPrice ||
+          maxPrice ||
+          minSpace ||
+          maxSpace ||
+          rooms ? (
+            <button
+              className="text-primaryBlack-300 text-sm font-medium"
+              onClick={() => dispatch({ type: "Clear" })}
+            >
+              გასუფთავება
+            </button>
+          ) : null}
         </div>
       </div>
       <div className="flex items-center gap-4 self-start">
         <Button
-          href="/createEstate"
+          href="/estates/createEstate"
           text={"+ ლისტინგის დამატება"}
           buttonStyles={
             "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200"

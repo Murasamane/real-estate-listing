@@ -10,8 +10,10 @@ export default {
         },
         primaryGrey: {
           100: "#F3F3F3",
+          150: "#DBDBDB",
           200: "#808A93",
           250: "#021526CC",
+          300: "#676E76",
         },
         primaryGreen: {
           200: "#45A849",
