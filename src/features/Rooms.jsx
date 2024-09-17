@@ -11,7 +11,7 @@ function Rooms({ onCloseDropdown }) {
   const handleSetRoom = (room) => setRoom(room);
 
   const handleRoomFilter = () => {
-    dispatch({ type: "Rooms", payload: room });
+    dispatch({ type: "Rooms", payload: Number(room) });
     onCloseDropdown();
   };
   return (

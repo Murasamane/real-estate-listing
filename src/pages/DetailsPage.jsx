@@ -78,6 +78,7 @@ function DetailsPage() {
                   <p>
                     {data.estate.agent.name} {data.estate.agent.surname}
                   </p>
+                  {/* fix styles for this tag below */}
                   <p>აგენტი</p>
                 </div>
               </div>

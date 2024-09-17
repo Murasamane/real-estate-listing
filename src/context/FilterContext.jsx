@@ -1,6 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 /* eslint-disable react/prop-types */
-import { useReducer } from "react";
+import { useEffect, useReducer } from "react";
 import { useContext } from "react";
 import { createContext } from "react";
 
@@ -60,8 +60,14 @@ const reducer = (state, action) => {
 };
 
 function FilterContextProvider({ children }) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+  const [state, dispatch] = useReducer(reducer, initialState, () => {
+    const savedFilters = sessionStorage.getItem("filters");
+    return savedFilters ? JSON.parse(savedFilters) : initialState;
+  });
 
+  useEffect(() => {
+    sessionStorage.setItem("filters", JSON.stringify(state));
+  }, [state]);
   return (
     <FilterContext.Provider value={{ state, dispatch }}>
       {children}

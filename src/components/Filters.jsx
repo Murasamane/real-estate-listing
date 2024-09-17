@@ -37,7 +37,7 @@ export default function Filters({ regions }) {
         </ul>
         <div className="flex items-center gap-2 flex-wrap max-w-nav">
           {region.map((region) => (
-            <FilterTag key={region} region={region} dispatch={dispatch} />
+            <FilterTag key={region.id} region={region} dispatch={dispatch} />
           ))}
           {minSpace > 0 && maxSpace > 0 ? (
             <RangeSpace

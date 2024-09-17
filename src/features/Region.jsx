@@ -13,6 +13,8 @@ function Region({ regions, onCloseDropdown }) {
     localStorage.setItem("regions", JSON.stringify(filterList));
     onCloseDropdown();
   }
+
+  console.log(regions);
   return (
     <div className="grid px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-md w-max">
       <h2 className="mb-6 font-bold">რეგიონის მიხედვით</h2>
@@ -21,7 +23,7 @@ function Region({ regions, onCloseDropdown }) {
         {regions.map((region) => (
           <Checkbox
             key={region.id}
-            region={region.name}
+            region={region}
             setFilterList={setFilterList}
             filterList={filterList}
           />

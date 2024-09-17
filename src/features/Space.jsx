@@ -11,8 +11,8 @@ function Space({ onCloseDropdown }) {
   const handleMaxSpace = (e) => setMaxSpace(e.target.value);
 
   const handleSpaceFilter = () => {
-    dispatch({ type: "MinSpace", payload: minSpace });
-    dispatch({ type: "MaxSpace", payload: maxSpace });
+    dispatch({ type: "MinSpace", payload: Number(minSpace) });
+    dispatch({ type: "MaxSpace", payload: Number(maxSpace) });
     onCloseDropdown();
   };
   return (

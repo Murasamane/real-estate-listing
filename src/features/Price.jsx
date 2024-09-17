@@ -11,8 +11,8 @@ function Price({ onCloseDropdown }) {
   const handleMaxPrice = (e) => setMaxPrice(e.target.value);
 
   const handlePriceFilter = () => {
-    dispatch({ type: "MinPrice", payload: minPrice });
-    dispatch({ type: "MaxPrice", payload: maxPrice });
+    dispatch({ type: "MinPrice", payload: Number(minPrice) });
+    dispatch({ type: "MaxPrice", payload: Number(maxPrice) });
     onCloseDropdown();
   };
   return (
