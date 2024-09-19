@@ -1,4 +1,5 @@
 /* eslint-disable react/prop-types */
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createAgent } from "../services/apiServices";
@@ -9,6 +10,7 @@ import toast from "react-hot-toast";
 
 function AddAgent({ onCloseModal }) {
   const queryClient = useQueryClient();
+  const [image, setImage] = useState(null);
   const { mutate } = useMutation({
     mutationKey: ["agentUpload"],
     mutationFn: createAgent,
@@ -19,7 +21,9 @@ function AddAgent({ onCloseModal }) {
       onCloseModal();
     },
     onError: () => {
-      toast.error("აგენტის დამატება ვერ მოხერხდა, გთხოვთ სცადოთ ხელახლა ! 😔😔😔");
+      toast.error(
+        "აგენტის დამატება ვერ მოხერხდა, გთხოვთ სცადოთ ხელახლა ! 😔😔😔"
+      );
     },
   });
   const {
@@ -37,8 +41,17 @@ function AddAgent({ onCloseModal }) {
       avatar: data.avatar,
       phone: data.phone,
     };
-
     mutate(agent);
+  };
+
+  const imagePreview = (e) => {
+    const imgUrl = URL.createObjectURL(e.target.files[0]);
+    setImage(imgUrl);
+  };
+
+  const clearImageSelection = () => {
+    setImage(null);
+    reset({ avatar: null });
   };
   return (
     <form
@@ -114,28 +127,45 @@ function AddAgent({ onCloseModal }) {
           errors={errors.phone}
         />
       </div>
-      <FileReader
-        type="file"
-        accept="image/*"
-        id="fileUpload"
-        name="file"
-        register={{ ...register("avatar", { required: true }) }}
-        requirement={"ატვირთეთ ფოტო"}
-        errors={errors.avatar}
-        label={"ატვირთეთ ფოტო"}
-      />
+      <div className="flex flex-col relative">
+        <FileReader
+          type="file"
+          accept="image/*"
+          id="fileUpload"
+          name="file"
+          register={{
+            ...register("avatar", {
+              required: true,
+              onChange: imagePreview,
+            }),
+          }}
+          preview={image}
+          requirement={"ატვირთეთ ფოტო"}
+          errors={errors.avatar}
+          label={"ატვირთეთ ფოტო"}
+        />
+        {image && (
+          <button
+            type="button"
+            onClick={clearImageSelection}
+            className="absolute top-1/2 left-1/2 translate-x-7 translate-y-5"
+          >
+            <img src="/images/clear.png" alt="clear file" />
+          </button>
+        )}
+      </div>
       <div className="flex items-center justify-end gap-4">
         <Button
           text={"გაუქმება"}
           buttonStyles={
-            "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px]"
+            "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px] hover:bg-primaryRed-200 hover:text-white"
           }
           onClick={onCloseModal}
         />
         <Button
           text={"დაამატე აგენტი"}
           buttonStyles={
-            "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200"
+            "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200 hover:bg-primaryRed-300"
           }
           type="submit"
         />

@@ -5,7 +5,12 @@ const InputElement = React.forwardRef(
   ({ label, requirement, errors, name, type, id, register }, ref) => {
     return (
       <div className="flex flex-col justify-center">
-        <label htmlFor={id}>{label}*</label>
+        <label
+          htmlFor={id}
+          className="font-bold text-base text-primaryBlack-400 mb-1"
+        >
+          {label}*
+        </label>
         <input
           type={type}
           name={name}

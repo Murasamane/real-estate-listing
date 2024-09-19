@@ -5,20 +5,31 @@ import { useFilters } from "../context/FilterContext";
 
 function Price({ onCloseDropdown }) {
   const { state, dispatch } = useFilters();
+  const [isValid, setIsValid] = useState(null);
   const [minPrice, setMinPrice] = useState(state.minPrice);
   const [maxPrice, setMaxPrice] = useState(state.maxPrice);
-  const handleMinPrice = (e) => setMinPrice(e.target.value);
-  const handleMaxPrice = (e) => setMaxPrice(e.target.value);
+  const handleMinPrice = (e) => setMinPrice(+e.target.value);
+  const handleMaxPrice = (e) => {
+    if (Number(minPrice) > Number(maxPrice)) {
+      setIsValid(false);
+      setMaxPrice(+e.target.value);
+    } else {
+      setIsValid(null);
+      setMaxPrice(+e.target.value);
+    }
+  };
 
   const handlePriceFilter = () => {
-    dispatch({ type: "MinPrice", payload: Number(minPrice) });
-    dispatch({ type: "MaxPrice", payload: Number(maxPrice) });
-    onCloseDropdown();
+    if (isValid === false) return;
+    else {
+      dispatch({ type: "MinPrice", payload: Number(minPrice) });
+      dispatch({ type: "MaxPrice", payload: Number(maxPrice) });
+      onCloseDropdown();
+    }
   };
   return (
     <div className="grid px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-md w-max">
       <h2 className="mb-6 font-bold">ფასის მიხედვით</h2>
-
       <div className="flex items-center gap-3.5">
         <div className="flex flex-col justify-center gap-6">
           <input
@@ -60,10 +71,15 @@ function Price({ onCloseDropdown }) {
           </div>
         </div>
       </div>
+      {isValid === false && (
+        <p className="text-primaryRed-200 flex items-center gap-2 mt-1 text-sm">
+          ჩაწერეთ ვალიდური მონაცემები
+        </p>
+      )}
       <Button
         text={"არჩევა"}
         buttonStyles={
-          "justify-self-end text-white bg-primaryRed-200 rounded-lg py-2 px-3.5 mt-8"
+          "justify-self-end text-white bg-primaryRed-200 rounded-lg py-2 px-3.5 mt-8 hover:bg-primaryRed-300"
         }
         onClick={handlePriceFilter}
       />

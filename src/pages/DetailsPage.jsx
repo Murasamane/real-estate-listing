@@ -75,11 +75,12 @@ function DetailsPage() {
               <div className="flex items-center gap-3.5">
                 <img src={data.estate.agent.avatar} alt="" />
                 <div className="flex flex-col gap-1">
-                  <p>
+                  <p className="text-primaryBlack-300 text-base font-bold">
                     {data.estate.agent.name} {data.estate.agent.surname}
                   </p>
-                  {/* fix styles for this tag below */}
-                  <p>აგენტი</p>
+                  <p className="text-sm text-primaryGrey-300 font-bold">
+                    აგენტი
+                  </p>
                 </div>
               </div>
 
@@ -102,7 +103,7 @@ function DetailsPage() {
                   <Button
                     text={"ლისტინგის წაშლა"}
                     buttonStyles={
-                      "text-primaryGrey-300 self-start font-bold  px-4 py-3 rounded-[10px] border-2 border-primaryGrey-300"
+                      "text-primaryGrey-300 self-start font-bold  px-4 py-3 rounded-[10px] border-2 border-primaryGrey-300 hover:bg-primaryGrey-200 hover:text-white"
                     }
                   />
                 </Modal.Open>

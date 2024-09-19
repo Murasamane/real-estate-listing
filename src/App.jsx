@@ -6,6 +6,7 @@ import AddEstate from "./pages/AddEstate";
 import EstateLayout from "./layouts/EstateLayout";
 import { Toaster } from "react-hot-toast";
 import DetailsPage from "./pages/DetailsPage";
+import NotFound from "./components/notFound";
 
 function App() {
   const queryClient = new QueryClient({
@@ -26,6 +27,7 @@ function App() {
             <Route path="createEstate" element={<AddEstate />} />
             <Route path=":id" element={<DetailsPage />} />
           </Route>
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
       <Toaster

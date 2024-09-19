@@ -44,7 +44,7 @@ function Rooms({ onCloseDropdown }) {
       <Button
         text={"არჩევა"}
         buttonStyles={
-          "justify-self-end text-white bg-primaryRed-200 rounded-lg py-2 px-3.5 mt-8"
+          "justify-self-end text-white bg-primaryRed-200 rounded-lg py-2 px-3.5 mt-8 hover:bg-primaryRed-300"
         }
         onClick={handleRoomFilter}
       />

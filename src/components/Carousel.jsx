@@ -23,7 +23,7 @@ const Carousel = ({ children }) => {
   };
 
   return (
-    <div className="flex items-center gap-7">
+    <div className="flex items-center gap-4 px-3">
       <button onClick={() => moveCarousel("prev")}>
         <img src="/images/back.png" alt="" />
       </button>

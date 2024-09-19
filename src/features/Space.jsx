@@ -5,15 +5,27 @@ import Button from "../components/Button";
 
 function Space({ onCloseDropdown }) {
   const { state, dispatch } = useFilters();
+  const [isValid, setIsValid] = useState(null);
   const [minSpace, setMinSpace] = useState(state.minSpace);
   const [maxSpace, setMaxSpace] = useState(state.maxSpace);
-  const handleMinSpace = (e) => setMinSpace(e.target.value);
-  const handleMaxSpace = (e) => setMaxSpace(e.target.value);
+  const handleMinSpace = (e) => setMinSpace(Number(e.target.value));
+  const handleMaxSpace = (e) => {
+    if (minSpace > maxSpace) {
+      setIsValid(false);
+      setMaxSpace(Number(e.target.value));
+    } else {
+      setIsValid(null);
+      setMaxSpace(Number(e.target.value));
+    }
+  };
 
   const handleSpaceFilter = () => {
-    dispatch({ type: "MinSpace", payload: Number(minSpace) });
-    dispatch({ type: "MaxSpace", payload: Number(maxSpace) });
-    onCloseDropdown();
+    if (isValid === false) return;
+    else {
+      dispatch({ type: "MinSpace", payload: Number(minSpace) });
+      dispatch({ type: "MaxSpace", payload: Number(maxSpace) });
+      onCloseDropdown();
+    }
   };
   return (
     <div className="grid px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-md w-max">
@@ -84,10 +96,15 @@ function Space({ onCloseDropdown }) {
           </div>
         </div>
       </div>
+      {isValid === false && (
+        <p className="text-primaryRed-200 flex items-center gap-2 mt-1 text-sm">
+          ჩაწერეთ ვალიდური მონაცემები
+        </p>
+      )}
       <Button
         text={"არჩევა"}
         buttonStyles={
-          "justify-self-end text-white bg-primaryRed-200 rounded-lg py-2 px-3.5 mt-8"
+          "justify-self-end text-white bg-primaryRed-200 rounded-lg py-2 px-3.5 mt-8 hover:bg-primaryRed-300"
         }
         onClick={handleSpaceFilter}
       />

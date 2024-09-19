@@ -5,7 +5,7 @@ function ListingCard({ data }) {
   return (
     <Link
       to={`/estates/${data.id}`}
-      className="grid items-center justify-center hover:drop-shadow-md max-w-fit  relative"
+      className="grid items-center justify-center hover:drop-shadow-md max-w-fit relative"
     >
       <img
         src={data.image}

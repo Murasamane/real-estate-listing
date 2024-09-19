@@ -12,7 +12,7 @@ import toast from "react-hot-toast";
 function AddEstate() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [filteredCities, setFilteredCities] = useState([]);
-
+  const [image, setImage] = useState(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
@@ -39,8 +39,8 @@ function AddEstate() {
     formState: { errors },
     setValue,
     watch,
-    handleSubmit,
     reset,
+    handleSubmit,
   } = useForm();
 
   const regionWatch = watch("region");
@@ -62,7 +62,15 @@ function AddEstate() {
 
     mutate(estate);
   };
+  const imagePreview = (e) => {
+    const imgUrl = URL.createObjectURL(e.target.files[0]);
+    setImage(imgUrl);
+  };
 
+  const clearImageSelection = () => {
+    setImage(null);
+    reset({ image: null });
+  };
   const handleRegionChange = (event) => {
     const regionId = event.target.value;
     setSelectedRegion(regionId);
@@ -84,7 +92,7 @@ function AddEstate() {
 
   return (
     <form
-      className="w-[780px] m-auto flex flex-col gap-14"
+      className="w-[780px] m-auto flex flex-col gap-14 py-16"
       onSubmit={handleSubmit(handleFormSubmit)}
     >
       <h1 className="text-center font-bold text-primaryBlack-300 text-3xl">
@@ -118,11 +126,23 @@ function AddEstate() {
             />
             ქირავდება
           </label>
+          {errors.deal && (
+            <p
+              className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
+                errors.deal ? "text-primaryRed-200" : ""
+              }`}
+            >
+              <img src="/images/check.png" alt="check" /> შეთანხმების ფორმა
+              აუცილებელია
+            </p>
+          )}
         </div>
       </div>
 
       <div className="flex flex-col gap-5">
-        <h2>მდებარეობა</h2>
+        <h2 className="font-bold text-base text-primaryBlack-400">
+          მდებარეობა
+        </h2>
 
         <div className="flex items-center gap-5">
           <InputElement
@@ -162,7 +182,9 @@ function AddEstate() {
 
         <div className="flex items-center gap-5">
           <div>
-            <h2>რეგიონი</h2>
+            <p className="font-bold text-base text-primaryBlack-400 mb-1">
+              რეგიონი
+            </p>
             <select
               name="region"
               id="region"
@@ -177,31 +199,55 @@ function AddEstate() {
                 </option>
               ))}
             </select>
-            {errors.region && <p>{errors.region.message}</p>}
+            {errors.region && (
+              <p
+                className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
+                  errors.region ? "text-primaryRed-200" : ""
+                }`}
+              >
+                <img src="/images/check.png" alt="check" />{" "}
+                {errors.region.message}
+              </p>
+            )}
           </div>
 
-          <div>
-            <h2>ქალაქი</h2>
-            <select
-              name="city"
-              id="city"
-              className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
-              {...register("city", { required: "ქალაქი აუცილებელია" })}
-            >
-              <option value="">აირჩიეთ ქალაქი</option>
-              {filteredCities.map((city) => (
-                <option key={city.id} value={city.id}>
-                  {city.name}
-                </option>
-              ))}
-            </select>
-            {errors.city && <p>{errors.city.message}</p>}
-          </div>
+          {selectedRegion && (
+            <div>
+              <p className="font-bold text-base text-primaryBlack-400 mb-1">
+                ქალაქი
+              </p>
+              <select
+                name="city"
+                id="city"
+                className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
+                {...register("city", { required: "ქალაქი აუცილებელია" })}
+              >
+                <option value="">აირჩიეთ ქალაქი</option>
+                {filteredCities.map((city) => (
+                  <option key={city.id} value={city.id}>
+                    {city.name}
+                  </option>
+                ))}
+              </select>
+              {errors.city && (
+                <p
+                  className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
+                    errors.city ? "text-primaryRed-200" : ""
+                  }`}
+                >
+                  <img src="/images/check.png" alt="check" />{" "}
+                  {errors.city.message}
+                </p>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
       <div className="flex flex-col gap-5">
-        <h2>ბინის დეტალები</h2>
+        <h2 className="font-bold text-base text-primaryBlack-400">
+          ბინის დეტალები
+        </h2>
 
         <div className="flex items-center gap-5">
           <div>
@@ -270,7 +316,12 @@ function AddEstate() {
       </div>
 
       <div className="flex flex-col gap-2">
-        <label htmlFor="description">აღწერა *</label>
+        <label
+          htmlFor="description"
+          className="font-bold text-base text-primaryBlack-400"
+        >
+          აღწერა *
+        </label>
         <textarea
           type="text"
           id="description"
@@ -287,20 +338,35 @@ function AddEstate() {
           მინიმუმ ხუთი სიტყვა
         </p>
       </div>
-
-      <FileReader
-        type="file"
-        accept="image/*"
-        id="fileUpload"
-        name="file"
-        register={{ ...register("image", { required: true }) }}
-        requirement={"ატვირთეთ ფოტო"}
-        errors={errors.image}
-        label={"ატვირთეთ ფოტო"}
-      />
-
+      <div className="flex flex-col relative">
+        <FileReader
+          type="file"
+          accept="image/*"
+          id="fileUpload"
+          name="file"
+          preview={image}
+          register={{
+            ...register("image", { required: true, onChange: imagePreview }),
+          }}
+          requirement={"ატვირთეთ ფოტო"}
+          errors={errors.image}
+          label={"ატვირთეთ ფოტო"}
+        />
+        {image && (
+          <button
+            type="button"
+            onClick={clearImageSelection}
+            className="absolute top-1/2 left-1/2 translate-x-9 translate-y-5"
+          >
+            <img src="/images/clear.png" alt="clear file" />
+          </button>
+        )}
+      </div>
       <div>
-        <h2>აგენტი</h2>
+        <h2 className="font-bold text-base text-primaryBlack-400 mb-3.5">
+          აგენტი
+        </h2>
+        <p className="font-bold text-sm text-primaryBlack-300 mb-1">აირჩიე</p>
         <select
           name="agent"
           id="agent"
@@ -310,25 +376,33 @@ function AddEstate() {
           <option value="">აირჩიეთ აგენტი</option>
           {data?.agents.map((agent) => (
             <option key={agent.id} value={agent.id}>
-              {agent.name}
+              {agent.name} {agent.surname}
             </option>
           ))}
         </select>
-        {errors.agent && <p>{errors.agent.message}</p>}
+        {errors.agent && (
+          <p
+            className={`flex items-center gap-2 mt-1 text-primaryBlack-300 text-sm ${
+              errors.agent ? "text-primaryRed-200" : ""
+            }`}
+          >
+            <img src="/images/check.png" alt="check" /> {errors.agent.message}
+          </p>
+        )}
       </div>
 
       <div className="flex items-center justify-end gap-4">
         <Button
           text={"გაუქმება"}
           buttonStyles={
-            "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px]"
+            "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px] hover:bg-primaryRed-200 hover:text-white"
           }
           onClick={handleCancel}
         />
         <Button
           text={"დაამატე აგენტი"}
           buttonStyles={
-            "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200"
+            "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200 hover:bg-primaryRed-300"
           }
           type="submit"
         />

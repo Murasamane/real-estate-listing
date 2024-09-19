@@ -1,15 +1,33 @@
 /* eslint-disable react/prop-types */
-function FileReader({ register, errors, label, requirement, name, id }) {
+function FileReader({
+  register,
+  errors,
+  label,
+  requirement,
+  name,
+  id,
+  preview = null,
+}) {
   return (
     <div className="w-full">
-      <p className="mb-2.5 font-medium text-primaryBlack-300 text-sm">
+      <p className="mb-2.5 font-bold text-base text-primaryBlack-400">
         {label} *
       </p>
       <label
         htmlFor={id}
         className="w-[800px] h-[120px] border-2 border-dotted border-primaryBlue-200 flex items-center justify-center rounded-lg"
       >
-        <img src="/images/plus.png" alt="file upload" />
+        {!preview ? (
+          <img src="/images/plus.png" alt="file upload" />
+        ) : (
+          <img
+            src={preview}
+            width="92px"
+            height="92px"
+            className="rounded-md"
+            alt="file upload"
+          />
+        )}
       </label>
       <input
         type="file"

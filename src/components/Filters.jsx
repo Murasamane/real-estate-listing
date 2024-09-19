@@ -75,7 +75,7 @@ export default function Filters({ regions }) {
           href="/estates/createEstate"
           text={"+ ლისტინგის დამატება"}
           buttonStyles={
-            "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200"
+            "text-white font-bold bg-primaryRed-200 px-4 py-3 rounded-[10px] border-2 border-primaryRed-200 hover:bg-primaryRed-300"
           }
         />
         <Modal>
@@ -83,7 +83,7 @@ export default function Filters({ regions }) {
             <Button
               text={"+ აგენტის დამატება"}
               buttonStyles={
-                "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px]"
+                "text-primaryRed-200 font-bold bg-white border-2 border-primaryRed-200 px-4 py-3 rounded-[10px] hover:bg-primaryRed-200 hover:text-white"
               }
             />
           </Modal.Open>
