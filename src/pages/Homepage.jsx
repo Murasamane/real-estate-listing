@@ -1,9 +1,10 @@
 import ListingCard from "../components/ListingCard";
+import Loader from "../components/Loader";
 import { useFilteredData } from "../hooks/useFilteredData";
 
 export default function Homepage() {
   const { filteredData, isLoading } = useFilteredData();
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader />;
 
   return (
     <div className="grid grid-cols-4 items-center justify-items-center flex-wrap gap-5">

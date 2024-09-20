@@ -8,6 +8,7 @@ import InputElement from "../components/InputElement";
 import FileReader from "../components/FileReader";
 import Button from "../components/Button";
 import toast from "react-hot-toast";
+import Loader from "../components/Loader";
 
 function AddEstate() {
   const [selectedRegion, setSelectedRegion] = useState(null);
@@ -148,7 +149,7 @@ function AddEstate() {
     }
   }, [selectedRegion, data]);
 
-  if (isLoading) return <p>Loading...</p>;
+  if (isLoading) return <Loader />;
 
   return (
     <form

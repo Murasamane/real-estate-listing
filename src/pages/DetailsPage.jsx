@@ -7,6 +7,7 @@ import Button from "../components/Button";
 import DeleteListing from "../features/DeleteListing";
 import Carousel from "../components/Carousel";
 import ListingCard from "../components/ListingCard";
+import Loader from "../components/Loader";
 function DetailsPage() {
   const { id } = useParams();
 
@@ -15,7 +16,7 @@ function DetailsPage() {
     queryFn: () => getSimilar(id),
   });
 
-  if (isLoading) return <p>Loading</p>;
+  if (isLoading) return <Loader />;
 
   return (
     <div>
