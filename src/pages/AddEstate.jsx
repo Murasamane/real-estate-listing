@@ -12,11 +12,16 @@ import toast from "react-hot-toast";
 function AddEstate() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [filteredCities, setFilteredCities] = useState([]);
+  const [savedCity, setSavedCity] = useState("");
   const [image, setImage] = useState(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
 
-  const handleCancel = () => navigate(-1);
+  const handleCancel = () => {
+    sessionStorage.removeItem("addEstateForm");
+    sessionStorage.removeItem("image");
+    navigate(-1);
+  };
   const { data, isLoading } = useQuery({
     queryKey: ["regionsAndCities"],
     queryFn: getRegionsAndCities,
@@ -27,10 +32,12 @@ function AddEstate() {
     mutationFn: createListing,
     onSuccess: () => {
       queryClient.invalidateQueries();
+      sessionStorage.removeItem("addEstateForm");
+      sessionStorage.removeItem("image");
       toast.success("ლისტინგი წარმატებით დაემატა 🥳🥳🥳🥳");
       navigate("/");
     },
-    onError: (err) => {
+    onError: () => {
       toast.error("ლისტინგის დამატება ვერ მოხერხდა, სცადეთ ახლიდან! 😔");
     },
   });
@@ -45,6 +52,44 @@ function AddEstate() {
 
   const regionWatch = watch("region");
 
+  const formValues = watch();
+
+  useEffect(() => {
+    const savedFormData = sessionStorage.getItem("addEstateForm");
+    const savedImage = sessionStorage.getItem("image");
+
+    const formDataFormat = JSON.parse(savedFormData);
+    const formattedData = {
+      address: formDataFormat?.address,
+      agent: formDataFormat?.agent,
+      area: formDataFormat?.area,
+      bedrooms: formDataFormat?.bedrooms,
+      city: formDataFormat?.city,
+      deal: formDataFormat?.deal,
+      description: formDataFormat?.description,
+      price: formDataFormat?.price,
+      region: formDataFormat?.region,
+      zipcode: formDataFormat?.zipcode,
+      image: JSON.parse(savedImage),
+    };
+    if (savedFormData) {
+      Object.keys(formattedData).forEach((key) => {
+        setValue(key, formattedData[key]);
+        if (key === "region") {
+          setSelectedRegion(+formattedData[key]);
+        }
+        if (key === "city") {
+          setSavedCity(`${formattedData[key]}`);
+        }
+      });
+    }
+  }, [setValue]);
+
+  useEffect(() => {
+    if (Object.keys(formValues).length > 0) {
+      sessionStorage.setItem("addEstateForm", JSON.stringify(formValues));
+    }
+  }, [formValues]);
   const handleFormSubmit = (data) => {
     const estate = {
       address: data.address,
@@ -59,11 +104,26 @@ function AddEstate() {
       is_rental: data.deal === "rent" ? 1 : 0,
       agent_id: data.agent,
     };
-
     mutate(estate);
   };
   const imagePreview = (e) => {
     const imgUrl = URL.createObjectURL(e.target.files[0]);
+    sessionStorage.setItem(
+      "image",
+      JSON.stringify({
+        File: {
+          lastModified: e.target.files[0].lastModified,
+          lastModifiedDate: new Date(
+            e.target.files[0].lastModifiedDate
+          ).toString(),
+          name: e.target.files[0].name,
+          size: e.target.files[0].size,
+          type: e.target.files[0].type,
+          webkitRelativePath: e.target.files[0].webkitRelativePath,
+        },
+      })
+    );
+
     setImage(imgUrl);
   };
 
@@ -79,7 +139,7 @@ function AddEstate() {
 
   useEffect(() => {
     if (selectedRegion) {
-      const cities = data.cities.filter(
+      const cities = data?.cities.filter(
         (city) => city.region_id === Number(selectedRegion)
       );
       setFilteredCities(cities);
@@ -205,13 +265,13 @@ function AddEstate() {
                   errors.region ? "text-primaryRed-200" : ""
                 }`}
               >
-                <img src="/images/check.png" alt="check" />{" "}
+                <img src="/images/check.png" alt="check" />
                 {errors.region.message}
               </p>
             )}
           </div>
 
-          {selectedRegion && (
+          {selectedRegion ? (
             <div>
               <p className="font-bold text-base text-primaryBlack-400 mb-1">
                 ქალაქი
@@ -219,11 +279,15 @@ function AddEstate() {
               <select
                 name="city"
                 id="city"
+                value={savedCity}
                 className="border-2 border-primaryGrey-200 rounded-md p-2.5 w-96"
-                {...register("city", { required: "ქალაქი აუცილებელია" })}
+                {...register("city", {
+                  required: "ქალაქი აუცილებელია",
+                  onChange: (e) => setSavedCity(e.target.value),
+                })}
               >
                 <option value="">აირჩიეთ ქალაქი</option>
-                {filteredCities.map((city) => (
+                {filteredCities?.map((city) => (
                   <option key={city.id} value={city.id}>
                     {city.name}
                   </option>
@@ -240,7 +304,7 @@ function AddEstate() {
                 </p>
               )}
             </div>
-          )}
+          ) : null}
         </div>
       </div>
 
@@ -345,6 +409,7 @@ function AddEstate() {
           id="fileUpload"
           name="file"
           preview={image}
+          // value
           register={{
             ...register("image", { required: true, onChange: imagePreview }),
           }}

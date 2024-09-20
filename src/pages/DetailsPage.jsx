@@ -115,16 +115,18 @@ function DetailsPage() {
           </div>
         </div>
       </div>
-      <div className="flex flex-col justify-center mt-16 gap-14">
-        <h2 className="font-bold text-2xl text-primaryBlack-300 px-9">
-          ბინები მსგავს ლოკაციაზე
-        </h2>
-        <Carousel>
-          {data.similars.map((estate) => (
-            <ListingCard key={estate.id} data={estate} />
-          ))}
-        </Carousel>
-      </div>
+      {data.similars.length > 0 && (
+        <div className="flex flex-col justify-center mt-16 gap-14">
+          <h2 className="font-bold text-2xl text-primaryBlack-300 px-9">
+            ბინები მსგავს ლოკაციაზე
+          </h2>
+          <Carousel>
+            {data.similars.map((estate) => (
+              <ListingCard key={estate.id} data={estate} />
+            ))}
+          </Carousel>
+        </div>
+      )}
     </div>
   );
 }
