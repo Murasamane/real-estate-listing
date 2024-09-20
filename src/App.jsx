@@ -6,7 +6,7 @@ import AddEstate from "./pages/AddEstate";
 import EstateLayout from "./layouts/EstateLayout";
 import { Toaster } from "react-hot-toast";
 import DetailsPage from "./pages/DetailsPage";
-import NotFound from "./components/notFound";
+import NotFound from "./components/NotFound";
 
 function App() {
   const queryClient = new QueryClient({
