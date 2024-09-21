@@ -8,25 +8,21 @@ function Price({ onCloseDropdown }) {
   const [isValid, setIsValid] = useState(null);
   const [minPrice, setMinPrice] = useState(state.minPrice);
   const [maxPrice, setMaxPrice] = useState(state.maxPrice);
+
   const handleMinPrice = (e) => setMinPrice(+e.target.value);
-  const handleMaxPrice = (e) => {
-    if (Number(minPrice) > Number(maxPrice)) {
-      setIsValid(false);
-      setMaxPrice(+e.target.value);
-    } else {
-      setIsValid(null);
-      setMaxPrice(+e.target.value);
-    }
-  };
+  const handleMaxPrice = (e) => setMaxPrice(+e.target.value);
 
   const handlePriceFilter = () => {
-    if (isValid === false) return;
-    else {
+    if (Number(minPrice) > Number(maxPrice)) {
+      setIsValid(false);
+    } else {
+      setIsValid(true);
       dispatch({ type: "MinPrice", payload: Number(minPrice) });
       dispatch({ type: "MaxPrice", payload: Number(maxPrice) });
       onCloseDropdown();
     }
   };
+
   return (
     <div className="grid px-4 py-2 text-gray-800 bg-white border border-gray-300 rounded-md w-max">
       <h2 className="mb-6 font-bold">ფასის მიხედვით</h2>
